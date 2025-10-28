@@ -9,14 +9,14 @@ on:
   issues:
     types: [opened, closed, reopened]
   fork:
-  watch:  # stars
+  watch:
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord Notification
-        uses: Ilshidur/action-discord@v2.2.0
+        uses: Ilshidur/action-discord@a1c1b29d1b5f6f4a2c5c3f20df3bb1f5c8c5f9b0
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           message: |
