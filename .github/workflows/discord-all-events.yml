@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord Notification
-        uses: Ilshidur/action-discord@a1c1b29d1b5f6f4a2c5c3f20df3bb1f5c8c5f9b0
+        uses: Ilshidur/action-discord@v2   # ✅ switched from commit SHA to stable tag
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          message: |
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}   # ✅ the action expects this exact name
+          args: |                                   # ✅ input name is 'args', not 'message'
             ${{ github.event_name == 'push' && format(
               '🚀 **Push** to **{0}**\nBranch: {1}\nPusher: {2}\nCommit: [{3}]({4})\nMessage: {5}',
               github.repository,
