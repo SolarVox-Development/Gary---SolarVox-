@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord Notification
-        uses: Ilshidur/action-discord@v2   # ✅ switched from commit SHA to stable tag
+        uses: Ilshidur/action-discord@master   # ✅ switched from commit SHA to stable tag
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}   # ✅ the action expects this exact name
           args: |                                   # ✅ input name is 'args', not 'message'
