@@ -9,6 +9,7 @@ It is a Python bot that can run as a single file or integrate with MariaDB/MySQL
 - Utility commands: ping, config updates
 - Welcome/leave messages and anti-link protection
 - Optional MariaDB/MySQL database support
+- C! and / Commands 
 
 ## Requirements
 - Python 3.8+
