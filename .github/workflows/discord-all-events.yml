@@ -18,11 +18,24 @@ jobs:
       - name: Send Discord Notification
         uses: Ilshidur/action-discord@master
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}   # ✅ webhook must be provided as an env variable
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          args: |                                           # ✅ only 'args' is supported as input
+          args: |
             ${{ github.event_name == 'push' && format(
-              '🚀 **Push** to **{0}**\nBranch: {1}\nPusher: {2}\nCommit: [{3}]({4})\nMessage: {5}',
+              '{
+                "embeds": [
+                  {
+                    "title": "🚀 Push to {0}",
+                    "color": 3066993,
+                    "fields": [
+                      {"name": "Branch", "value": "{1}", "inline": true},
+                      {"name": "Pusher", "value": "{2}", "inline": true},
+                      {"name": "Commit", "value": "[{3}]({4})", "inline": false},
+                      {"name": "Message", "value": "{5}", "inline": false}
+                    ]
+                  }
+                ]
+              }',
               github.repository,
               github.ref_name,
               github.actor,
@@ -32,7 +45,20 @@ jobs:
             ) }}
 
             ${{ github.event_name == 'pull_request' && format(
-              '🔀 **Pull Request** in **{0}**\nTitle: {1}\nAuthor: {2}\nURL: {3}\nState: {4}',
+              '{
+                "embeds": [
+                  {
+                    "title": "🔀 Pull Request in {0}",
+                    "color": 3447003,
+                    "fields": [
+                      {"name": "Title", "value": "{1}", "inline": false},
+                      {"name": "Author", "value": "{2}", "inline": true},
+                      {"name": "URL", "value": "{3}", "inline": true},
+                      {"name": "State", "value": "{4}", "inline": true}
+                    ]
+                  }
+                ]
+              }',
               github.repository,
               github.event.pull_request.title,
               github.event.pull_request.user.login,
@@ -41,7 +67,20 @@ jobs:
             ) }}
 
             ${{ github.event_name == 'issues' && format(
-              '❗ **Issue** in **{0}**\nTitle: {1}\nAuthor: {2}\nURL: {3}\nState: {4}',
+              '{
+                "embeds": [
+                  {
+                    "title": "❗ Issue in {0}",
+                    "color": 15158332,
+                    "fields": [
+                      {"name": "Title", "value": "{1}", "inline": false},
+                      {"name": "Author", "value": "{2}", "inline": true},
+                      {"name": "URL", "value": "{3}", "inline": true},
+                      {"name": "State", "value": "{4}", "inline": true}
+                    ]
+                  }
+                ]
+              }',
               github.repository,
               github.event.issue.title,
               github.event.issue.user.login,
@@ -50,13 +89,35 @@ jobs:
             ) }}
 
             ${{ github.event_name == 'fork' && format(
-              '🍴 **{0}** forked **{1}**',
+              '{
+                "embeds": [
+                  {
+                    "title": "🍴 Repository Forked",
+                    "color": 15844367,
+                    "fields": [
+                      {"name": "Actor", "value": "{0}", "inline": true},
+                      {"name": "Repository", "value": "{1}", "inline": true}
+                    ]
+                  }
+                ]
+              }',
               github.actor,
               github.repository
             ) }}
 
             ${{ github.event_name == 'watch' && format(
-              '⭐ **{0}** starred **{1}**',
+              '{
+                "embeds": [
+                  {
+                    "title": "⭐ Repository Starred",
+                    "color": 16776960,
+                    "fields": [
+                      {"name": "Actor", "value": "{0}", "inline": true},
+                      {"name": "Repository", "value": "{1}", "inline": true}
+                    ]
+                  }
+                ]
+              }',
               github.actor,
               github.repository
             ) }}
