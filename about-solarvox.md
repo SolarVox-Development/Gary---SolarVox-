@@ -42,4 +42,4 @@ We welcome feedback, feature requests, and contributions from the developer comm
 
 ---
 
-*Join us on our mission to make development simpler, faster, and more enjoyable!*  
+*Join us on our mission to make development simpler, faster, and more enjoyable!!*  
