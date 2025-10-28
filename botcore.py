@@ -489,28 +489,7 @@ async def on_message(message):
             color=0xFF0000).set_footer(text=footer_text))
         return
 
-    # Greetings check
-    greetings_list = ["hi", "hello", "yo", "wsp", "hola", "hey", "sup", "wassup", "howdy", "heya"]
-    if message.content.lower() in greetings_list:
-        responses = [
-            "Hello!", "Hola!", "Bonjour!", "Ciao!", "Hallo!",
-            "Olá!", "Namaste!", "Salaam!", "Konnichiwa!", "Nǐ hǎo!"
-        ]
-        await message.channel.send(f"{random.choice(responses)} {message.author.mention}")
-        return
-
-    # Core-related greetings check
-    core_greetings_list = ["CoreLink", "Core", "corelink", "the best bot ever"]
-    if message.content in core_greetings_list:
-        responses = [
-            f"Latency: '''{round(bot.latency * 1000)}ms'''",
-            f"[u make me wanna fall in love](https://corelinkdb.netlify.app)",
-            f"[Im so cool](https://discord.gg/ttK6K7k33h)",
-            f"[Here I am](https://corelinkdb.netlify.app/pages/invite)"
-        ]
-        await message.channel.send(f"{random.choice(responses)} {message.author.mention}")
-        return
-
+   
     # Trivia answer check
     for question, answer in trivia_questions:
         if message.content.lower() == answer.lower():
@@ -610,4 +589,5 @@ async def on_command_error(ctx, error):
     await ctx.send(f"⚠️ Error: {str(error)}")
 
 # Run the bot
-bot.run("MTMwMjEwMjQzNjcwMTQwNTI0NA.GE8m9d._sYWljmYpTAeDwrAD01Cr_LbReJ32icHuKKI8Q")
+
+bot.run("") # Put You Discord Bot Token Here
