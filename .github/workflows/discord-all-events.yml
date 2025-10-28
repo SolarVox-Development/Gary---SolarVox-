@@ -1,0 +1,38 @@
+name: Discord Repository Updates
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    types: [opened, closed, merged, reopened]
+  issues:
+    types: [opened, closed, reopened]
+  fork:
+  watch:  # stars
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification
+        uses: Ilshidur/action-discord@v2
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          message: |
+            ${{ github.event_name }} event in **${{ github.repository }}**
+            ${{ 
+              github.event_name == 'push' && format('🚀 Pusher: {0}\nBranch: {1}\nCommit: {2} - {3}', github.actor, github.ref_name, github.event.head_commit.id, github.event.head_commit.message)
+            }}
+            ${{ 
+              github.event_name == 'pull_request' && format('🔀 Pull Request: {0} by {1}\nURL: {2}', github.event.pull_request.title, github.event.pull_request.user.login, github.event.pull_request.html_url)
+            }}
+            ${{ 
+              github.event_name == 'issues' && format('❗ Issue: {0} by {1}\nURL: {2}', github.event.issue.title, github.event.issue.user.login, github.event.issue.html_url)
+            }}
+            ${{ 
+              github.event_name == 'fork' && format('🍴 {0} forked the repository', github.actor)
+            }}
+            ${{ 
+              github.event_name == 'watch' && format('⭐ {0} starred the repository', github.actor)
+            }}
