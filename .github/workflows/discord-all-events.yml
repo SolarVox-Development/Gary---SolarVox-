@@ -66,7 +66,7 @@ jobs:
             github.event_name == 'fork' && {
               embeds: [
                 {
-                  title: "🍴 Repository Forked",
+                  title: "Repository Forked",
                   color: 15844367,
                   fields: [
                     { name: "Actor", value: github.actor, inline: true },
