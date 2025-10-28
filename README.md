@@ -18,5 +18,5 @@ It is a Python bot that can run as a single file or integrate with MariaDB/MySQL
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/Gary-SolarVox.git
+   git clone https://github.com/SolarVox-Development/Gary---SolarVox-.git
    cd Gary-SolarVox
