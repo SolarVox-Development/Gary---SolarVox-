@@ -15,103 +15,159 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Push Event
+
+      # =========================
+      # Push Event
+      # =========================
+      - name: Prepare Push Payload
+        if: github.event_name == 'push'
+        run: |
+          mkdir -p temp
+          cat <<EOF > temp/payload.json
+          {
+            "embeds": [
+              {
+                "title": "🚀 Push to ${GITHUB_REPOSITORY}",
+                "color": 3066993,
+                "fields": [
+                  {"name": "Branch", "value": "${GITHUB_REF_NAME}", "inline": true},
+                  {"name": "Pusher", "value": "${GITHUB_ACTOR}", "inline": true},
+                  {"name": "Commit", "value": "[${GITHUB_SHA}](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})", "inline": false},
+                  {"name": "Message", "value": "${{ github.event.head_commit.message }}", "inline": false}
+                ]
+              }
+            ]
+          }
+          EOF
+
+      - name: Send Push Notification
         if: github.event_name == 'push'
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          args: ${{ toJSON({
-            embeds: [
+          args: "@temp/payload.json"
+
+      # =========================
+      # Pull Request Event
+      # =========================
+      - name: Prepare Pull Request Payload
+        if: github.event_name == 'pull_request'
+        run: |
+          mkdir -p temp
+          cat <<EOF > temp/payload.json
+          {
+            "embeds": [
               {
-                title: "🚀 Push to ${github.repository}",
-                color: 3066993,
-                fields: [
-                  { name: "Branch", value: github.ref_name, inline: true },
-                  { name: "Pusher", value: github.actor, inline: true },
-                  { name: "Commit", value: "[${github.sha}](${github.server_url}/${github.repository}/commit/${github.sha})", inline: false },
-                  { name: "Message", value: github.event.head_commit.message, inline: false }
+                "title": "🔀 Pull Request in ${GITHUB_REPOSITORY}",
+                "color": 3447003,
+                "fields": [
+                  {"name": "Title", "value": "${{ github.event.pull_request.title }}", "inline": false},
+                  {"name": "Author", "value": "${{ github.event.pull_request.user.login }}", "inline": true},
+                  {"name": "URL", "value": "${{ github.event.pull_request.html_url }}", "inline": true},
+                  {"name": "State", "value": "${{ github.event.pull_request.state }}", "inline": true}
                 ]
               }
             ]
-          }) }}
+          }
+          EOF
 
-      - name: Pull Request Event
+      - name: Send Pull Request Notification
         if: github.event_name == 'pull_request'
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          args: ${{ toJSON({
-            embeds: [
+          args: "@temp/payload.json"
+
+      # =========================
+      # Issues Event
+      # =========================
+      - name: Prepare Issue Payload
+        if: github.event_name == 'issues'
+        run: |
+          mkdir -p temp
+          cat <<EOF > temp/payload.json
+          {
+            "embeds": [
               {
-                title: "🔀 Pull Request in ${github.repository}",
-                color: 3447003,
-                fields: [
-                  { name: "Title", value: github.event.pull_request.title, inline: false },
-                  { name: "Author", value: github.event.pull_request.user.login, inline: true },
-                  { name: "URL", value: github.event.pull_request.html_url, inline: true },
-                  { name: "State", value: github.event.pull_request.state, inline: true }
+                "title": "❗ Issue in ${GITHUB_REPOSITORY}",
+                "color": 15158332,
+                "fields": [
+                  {"name": "Title", "value": "${{ github.event.issue.title }}", "inline": false},
+                  {"name": "Author", "value": "${{ github.event.issue.user.login }}", "inline": true},
+                  {"name": "URL", "value": "${{ github.event.issue.html_url }}", "inline": true},
+                  {"name": "State", "value": "${{ github.event.issue.state }}", "inline": true}
                 ]
               }
             ]
-          }) }}
+          }
+          EOF
 
-      - name: Issue Event
+      - name: Send Issue Notification
         if: github.event_name == 'issues'
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          args: ${{ toJSON({
-            embeds: [
+          args: "@temp/payload.json"
+
+      # =========================
+      # Fork Event
+      # =========================
+      - name: Prepare Fork Payload
+        if: github.event_name == 'fork'
+        run: |
+          mkdir -p temp
+          cat <<EOF > temp/payload.json
+          {
+            "embeds": [
               {
-                title: "❗ Issue in ${github.repository}",
-                color: 15158332,
-                fields: [
-                  { name: "Title", value: github.event.issue.title, inline: false },
-                  { name: "Author", value: github.event.issue.user.login, inline: true },
-                  { name: "URL", value: github.event.issue.html_url, inline: true },
-                  { name: "State", value: github.event.issue.state, inline: true }
+                "title": "🍴 Repository Forked",
+                "color": 15844367,
+                "fields": [
+                  {"name": "Actor", "value": "${GITHUB_ACTOR}", "inline": true},
+                  {"name": "Repository", "value": "${GITHUB_REPOSITORY}", "inline": true}
                 ]
               }
             ]
-          }) }}
+          }
+          EOF
 
-      - name: Fork Event
+      - name: Send Fork Notification
         if: github.event_name == 'fork'
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          args: ${{ toJSON({
-            embeds: [
+          args: "@temp/payload.json"
+
+      # =========================
+      # Star (Watch) Event
+      # =========================
+      - name: Prepare Star Payload
+        if: github.event_name == 'watch'
+        run: |
+          mkdir -p temp
+          cat <<EOF > temp/payload.json
+          {
+            "embeds": [
               {
-                title: "🍴 Repository Forked",
-                color: 15844367,
-                fields: [
-                  { name: "Actor", value: github.actor, inline: true },
-                  { name: "Repository", value: github.repository, inline: true }
+                "title": "⭐ Repository Starred",
+                "color": 16776960,
+                "fields": [
+                  {"name": "Actor", "value": "${GITHUB_ACTOR}", "inline": true},
+                  {"name": "Repository", "value": "${GITHUB_REPOSITORY}", "inline": true}
                 ]
               }
             ]
-          }) }}
+          }
+          EOF
 
-      - name: Star Event
+      - name: Send Star Notification
         if: github.event_name == 'watch'
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         with:
-          args: ${{ toJSON({
-            embeds: [
-              {
-                title: "⭐ Repository Starred",
-                color: 16776960,
-                fields: [
-                  { name: "Actor", value: github.actor, inline: true },
-                  { name: "Repository", value: github.repository, inline: true }
-                ]
-              }
-            ]
-          }) }}
+          args: "@temp/payload.json"
