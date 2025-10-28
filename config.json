@@ -1,0 +1,11 @@
+{
+    "_placeholder": "This is a placeholder for future settings. Do not remove this key.",
+    "prefix": "C!",
+    "welcome_channel": 0,
+    "log_channel": 0,
+    "ticket_category": 0,
+    "admin_role": 0,
+    "anti_link": true,
+    "welcome_message": "Welcome to {guild.name}, {user}!",
+    "leave_message": "Goodbye, {user}!"
+}
