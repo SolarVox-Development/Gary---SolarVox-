@@ -1,31 +1,28 @@
-{
-  "embeds": [
-    {
-      "title": "🚀 Push to ${GITHUB_REPOSITORY}",
-      "color": 3066993,
-      "fields": [
+- name: Set commit message
+  run: echo "GITHUB_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+
+- name: Prepare Discord Embed
+  run: |
+    mkdir -p temp
+    echo '{
+      "embeds": [
         {
-          "name": "Branch",
-          "value": "${GITHUB_REF_NAME}",
-          "inline": true
-        },
-        {
-          "name": "Pusher",
-          "value": "${GITHUB_ACTOR}",
-          "inline": true
-        },
-        {
-          "name": "Commit",
-          "value": "[${GITHUB_SHA}](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})",
-          "inline": false
-        },
-        {
-          "name": "Message",
-          "value": "Update discord-all-events.yml",
-          "inline": false
+          "title": "🚀 Push to '"$GITHUB_REPOSITORY"'",
+          "color": 3066993,
+          "fields": [
+            {"name": "Branch", "value": "'"$GITHUB_REF_NAME"'", "inline": true},
+            {"name": "Pusher", "value": "'"$GITHUB_ACTOR"'", "inline": true},
+            {"name": "Commit", "value": "[ '"$GITHUB_SHA"' ](https://github.com/'"$GITHUB_REPOSITORY"'/commit/'"$GITHUB_SHA"')", "inline": false},
+            {"name": "Message", "value": "'"${GITHUB_COMMIT_MESSAGE}"'", "inline": false}
+          ],
+          "timestamp": "'"$(date --utc +%Y-%m-%dT%H:%M:%SZ)"'"
         }
-      ],
-      "timestamp": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)"
-    }
-  ]
-}
+      ]
+    }' > temp/embed.json
+
+- name: Send Discord Embed
+  uses: Ilshidur/action-discord@master
+  env:
+    DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  with:
+    args: --file temp/embed.json
