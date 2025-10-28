@@ -1,28 +1,41 @@
-- name: Prepare Discord Embed
-  run: |
-    mkdir -p temp
-    cat <<EOF > temp/embed.json
-{
-  "embeds": [
-    {
-      "title": "🚀 Push to ${GITHUB_REPOSITORY}",
-      "color": 3066993,
-      "fields": [
-        {"name": "Branch", "value": "${GITHUB_REF_NAME}", "inline": true},
-        {"name": "Pusher", "value": "${GITHUB_ACTOR}", "inline": true},
-        {"name": "Commit", "value": "[${GITHUB_SHA}](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})", "inline": false},
-        {"name": "Message", "value": "Update discord-all-events.yml", "inline": false}
-      ],
-      "timestamp": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)"
-    }
-  ]
-}
-EOF
+name: Discord Embed Notification
 
-- name: Send Discord Embed
-  uses: Ilshidur/action-discord@master
-  env:
-    DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
-  with:
-    args: "@temp/embed.json"
+on:
+  push:
+    branches:
+      - main
 
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Prepare Discord Embed
+        run: |
+          mkdir -p temp
+          cat <<EOF > temp/embed.json
+          {
+            "embeds": [
+              {
+                "title": "🚀 Push to ${GITHUB_REPOSITORY}",
+                "color": 3066993,
+                "fields": [
+                  {"name": "Branch", "value": "${GITHUB_REF_NAME}", "inline": true},
+                  {"name": "Pusher", "value": "${GITHUB_ACTOR}", "inline": true},
+                  {"name": "Commit", "value": "[${GITHUB_SHA}](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA})", "inline": false},
+                  {"name": "Message", "value": "${{ github.event.head_commit.message }}", "inline": false}
+                ],
+                "timestamp": "$(date --utc +%Y-%m-%dT%H:%M:%SZ)"
+              }
+            ]
+          }
+          EOF
+
+      - name: Send Discord Embed
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          args: "@temp/embed.json"
