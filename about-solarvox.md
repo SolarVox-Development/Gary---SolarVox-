@@ -32,6 +32,7 @@ Our team consists of experienced developers, designers, and testers who are pass
 - Frequent updates and ongoing support.  
 - Designed to save time and streamline workflows.  
 - Transparent development and open feedback channels.
+- Made by Developers for Developers
 
 ---
 
