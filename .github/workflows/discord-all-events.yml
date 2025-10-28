@@ -5,7 +5,7 @@ on:
     branches:
       - '**'
   pull_request:
-    types: [opened, closed, merged, reopened]
+    types: [opened, closed, reopened, merged]
   issues:
     types: [opened, closed, reopened]
   fork:
@@ -16,23 +16,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Discord Notification
-        uses: Ilshidur/action-discord@v2
+        uses: Ilshidur/action-discord@v2.2.0
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           message: |
-            ${{ github.event_name }} event in **${{ github.repository }}**
-            ${{ 
-              github.event_name == 'push' && format('🚀 Pusher: {0}\nBranch: {1}\nCommit: {2} - {3}', github.actor, github.ref_name, github.event.head_commit.id, github.event.head_commit.message)
-            }}
-            ${{ 
-              github.event_name == 'pull_request' && format('🔀 Pull Request: {0} by {1}\nURL: {2}', github.event.pull_request.title, github.event.pull_request.user.login, github.event.pull_request.html_url)
-            }}
-            ${{ 
-              github.event_name == 'issues' && format('❗ Issue: {0} by {1}\nURL: {2}', github.event.issue.title, github.event.issue.user.login, github.event.issue.html_url)
-            }}
-            ${{ 
-              github.event_name == 'fork' && format('🍴 {0} forked the repository', github.actor)
-            }}
-            ${{ 
-              github.event_name == 'watch' && format('⭐ {0} starred the repository', github.actor)
-            }}
+            ${{ github.event_name == 'push' && format(
+              '🚀 **Push** to **{0}**\nBranch: {1}\nPusher: {2}\nCommit: [{3}]({4})\nMessage: {5}',
+              github.repository,
+              github.ref_name,
+              github.actor,
+              github.event.head_commit.id,
+              github.event.head_commit.url,
+              github.event.head_commit.message
+            ) }}
+
+            ${{ github.event_name == 'pull_request' && format(
+              '🔀 **Pull Request** in **{0}**\nTitle: {1}\nAuthor: {2}\nURL: {3}\nState: {4}',
+              github.repository,
+              github.event.pull_request.title,
+              github.event.pull_request.user.login,
+              github.event.pull_request.html_url,
+              github.event.pull_request.state
+            ) }}
+
+            ${{ github.event_name == 'issues' && format(
+              '❗ **Issue** in **{0}**\nTitle: {1}\nAuthor: {2}\nURL: {3}\nState: {4}',
+              github.repository,
+              github.event.issue.title,
+              github.event.issue.user.login,
+              github.event.issue.html_url,
+              github.event.issue.state
+            ) }}
+
+            ${{ github.event_name == 'fork' && format(
+              '🍴 **{0}** forked **{1}**',
+              github.actor,
+              github.repository
+            ) }}
+
+            ${{ github.event_name == 'watch' && format(
+              '⭐ **{0}** starred **{1}**',
+              github.actor,
+              github.repository
+            ) }}
