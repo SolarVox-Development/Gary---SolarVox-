@@ -18,10 +18,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Get commit message if it's a push event
+      # Get commit message if it's a push event, sanitized to prevent env errors
       - name: Set commit message (only for push)
         if: github.event_name == 'push'
-        run: echo "GITHUB_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B | tr '\n' ' ' | tr -d '\r')
+          echo "GITHUB_COMMIT_MESSAGE=$COMMIT_MSG" >> $GITHUB_ENV
 
       # Build the Discord embed JSON dynamically based on the event
       - name: Prepare Discord Embed
