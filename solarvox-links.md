@@ -55,7 +55,7 @@ Whether you’re a seasoned professional or just starting out, your input helps 
 - **Documentation:** [https://solarvox.pages.dev/docs](https://solarvox.pages.dev/docs)
 - **Discord:** [https://solarvox.pages.dev/discord](https://solarvox.pages.dev/discord)
 - **GitHub:** [https://solarvox.pages.dev/github](https://solarvox.pages.dev/github)
-
+- **API:** SOON
 ---
 
 © 2025 SolarVox. All rights reserved.
