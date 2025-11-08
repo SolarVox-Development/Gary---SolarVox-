@@ -301,7 +301,7 @@ async def timeout(interaction: discord.Interaction, member: discord.Member, dura
 async def timeout_prefix(ctx, member: discord.Member, duration: str, *, reason="No reason provided"):
     await timeout_member(ctx, member, duration, reason)
 
-# ✅ Untimeout Command
+#  Untimeout Command
 async def untimeout_member(interaction, member):
     try:
         await member.timeout(None)
@@ -591,3 +591,4 @@ async def on_command_error(ctx, error):
 # Run the bot
 
 bot.run("") # Put You Discord Bot Token Here
+
